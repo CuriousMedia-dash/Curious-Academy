@@ -11,7 +11,7 @@ export const trainingModules = [
     description: "How we plan, create, and distribute content that builds brands.",
     videos: [
       { title: "Part 1", url: "https://www.youtube.com/watch?v=CqLwfDMjjoU" },
-      { title: "Part 2", url: "" },
+      { title: "Part 2", url: "https://youtu.be/vDC2wiWz_Tw" },
     ],
   },
   {
