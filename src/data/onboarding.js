@@ -10,7 +10,7 @@ export const onboardingSections = [
     title: "Company Overview",
     description: "Learn about our story, mission, vision, and values.",
     presenter: "our Founder",
-    video: "https://www.youtube.com/watch?v=Z2cTVhzZpgY",
+    video: "https://youtu.be/VqIdDkVrXeY",
   },
   {
     title: "Team Introduction",
