@@ -2,7 +2,7 @@ import { useState } from "react";
 import { PlayCircle } from "lucide-react";
 import Sidebar from "../components/Sidebar";
 import VideoModal from "../components/VideoModal";
-import { trainingModules } from "../data/modules";
+import { trainingModules, getVideos } from "../data/modules";
 
 export default function LearningHub() {
   const [activeModule, setActiveModule] = useState(null);
@@ -49,7 +49,8 @@ export default function LearningHub() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {trainingModules.map((module) => {
-            const hasVideo = Boolean(module.video);
+            const videos = getVideos(module);
+            const hasVideo = videos.length > 0;
             return (
               <button
                 key={module.title}
@@ -65,7 +66,7 @@ export default function LearningHub() {
                   {hasVideo ? (
                     <span className="shrink-0 inline-flex items-center gap-1.5 text-sm font-medium text-slate-700 bg-slate-100 rounded-full px-3 py-1">
                       <PlayCircle size={16} />
-                      Watch
+                      {videos.length > 1 ? `${videos.length} parts` : "Watch"}
                     </span>
                   ) : (
                     <span className="shrink-0 text-sm text-slate-400">
@@ -83,7 +84,7 @@ export default function LearningHub() {
         {activeModule && (
           <VideoModal
             title={activeModule.title}
-            video={activeModule.video}
+            videos={getVideos(activeModule)}
             onClose={() => setActiveModule(null)}
           />
         )}

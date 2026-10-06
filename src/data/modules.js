@@ -1,14 +1,18 @@
 // Training modules shown on the Learning Hub page.
 //
-// To add a video, paste the share link between the quotes on the `video:` line.
+// One video:      video: "LINK"
+// Several parts:  videos: [ { title: "Part 1", url: "LINK" }, { title: "Part 2", url: "LINK" } ]
 // YouTube (Unlisted), Google Drive ("Anyone with the link"), and Loom links all work.
-// Leave `video` empty and the card shows "Video coming soon".
+// Leave links empty and the card shows "Video coming soon".
 
 export const trainingModules = [
   {
     title: "Content Marketing",
     description: "How we plan, create, and distribute content that builds brands.",
-    video: "https://www.youtube.com/watch?v=CqLwfDMjjoU",
+    videos: [
+      { title: "Part 1", url: "https://www.youtube.com/watch?v=CqLwfDMjjoU" },
+      { title: "Part 2", url: "https://youtu.be/CqLwfDMjjoU" },
+    ],
   },
   {
     title: "Creator Partnerships",
@@ -41,3 +45,9 @@ export const trainingModules = [
     video: "",
   },
 ];
+
+// Returns the playable videos for a module (handles both `video` and `videos`).
+export function getVideos(item) {
+  const list = item.videos ?? (item.video ? [{ title: item.title, url: item.video }] : []);
+  return list.filter((v) => v.url);
+}
