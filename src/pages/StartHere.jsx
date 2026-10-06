@@ -1,6 +1,12 @@
+import { useState } from "react";
+import { PlayCircle } from "lucide-react";
 import Sidebar from "../components/Sidebar";
+import VideoModal from "../components/VideoModal";
+import { onboardingSections } from "../data/onboarding";
 
 export default function StartHere() {
+  const [activeSection, setActiveSection] = useState(null);
+
   return (
     <div className="min-h-screen bg-slate-50">
       <Sidebar />
@@ -53,48 +59,51 @@ export default function StartHere() {
         {/* Onboarding Sections */}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {onboardingSections.map((section) => {
+            const hasVideo = Boolean(section.video);
+            return (
+              <button
+                key={section.title}
+                type="button"
+                disabled={!hasVideo}
+                onClick={() => hasVideo && setActiveSection(section)}
+                className={`text-left bg-white border border-slate-200 rounded-3xl p-6 transition ${
+                  hasVideo ? "hover:shadow-md cursor-pointer" : "cursor-default"
+                }`}
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <h3 className="text-xl font-semibold">{section.title}</h3>
+                  {hasVideo ? (
+                    <span className="shrink-0 inline-flex items-center gap-1.5 text-sm font-medium text-slate-700 bg-slate-100 rounded-full px-3 py-1">
+                      <PlayCircle size={16} />
+                      Watch
+                    </span>
+                  ) : (
+                    <span className="shrink-0 text-sm text-slate-400">
+                      Video coming soon
+                    </span>
+                  )}
+                </div>
 
-          <div className="bg-white border border-slate-200 rounded-3xl p-6 hover:shadow-md transition cursor-pointer">
-            <h3 className="text-xl font-semibold">
-              Company Overview
-            </h3>
+                <p className="mt-2 text-slate-600">{section.description}</p>
 
-            <p className="mt-2 text-slate-600">
-              Learn about our story, mission, vision, and values.
-            </p>
-          </div>
-
-          <div className="bg-white border border-slate-200 rounded-3xl p-6 hover:shadow-md transition cursor-pointer">
-            <h3 className="text-xl font-semibold">
-              Team Introduction
-            </h3>
-
-            <p className="mt-2 text-slate-600">
-              Meet the departments and key people you'll work with.
-            </p>
-          </div>
-
-          <div className="bg-white border border-slate-200 rounded-3xl p-6 hover:shadow-md transition cursor-pointer">
-            <h3 className="text-xl font-semibold">
-              Departments
-            </h3>
-
-            <p className="mt-2 text-slate-600">
-              Understand how each department contributes to the business.
-            </p>
-          </div>
-
-          <div className="bg-white border border-slate-200 rounded-3xl p-6 hover:shadow-md transition cursor-pointer">
-            <h3 className="text-xl font-semibold">
-              First Week Guide
-            </h3>
-
-            <p className="mt-2 text-slate-600">
-              Recommended steps to complete during your first week.
-            </p>
-          </div>
-
+                {section.presenter && (
+                  <p className="mt-3 text-sm text-slate-500">
+                    Presented by {section.presenter}
+                  </p>
+                )}
+              </button>
+            );
+          })}
         </div>
+
+        {activeSection && (
+          <VideoModal
+            title={activeSection.title}
+            video={activeSection.video}
+            onClose={() => setActiveSection(null)}
+          />
+        )}
 
         {/* Progress Section */}
 
