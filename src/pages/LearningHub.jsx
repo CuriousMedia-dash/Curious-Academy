@@ -1,6 +1,12 @@
+import { useState } from "react";
+import { PlayCircle } from "lucide-react";
 import Sidebar from "../components/Sidebar";
+import VideoModal from "../components/VideoModal";
+import { trainingModules } from "../data/modules";
 
 export default function LearningHub() {
+  const [activeModule, setActiveModule] = useState(null);
+
   return (
     <div className="min-h-screen bg-slate-50">
       <Sidebar />
@@ -35,17 +41,52 @@ export default function LearningHub() {
           </button>
         </div>
 
-        {/* Learning Hub Content */}
+        {/* Training Modules */}
 
-        <div className="bg-white rounded-3xl border border-slate-200 p-8">
-          <h2 className="text-2xl font-semibold">
-            Training Modules
-          </h2>
+        <h2 className="text-2xl font-semibold text-slate-900 mb-6">
+          Training Modules
+        </h2>
 
-          <p className="mt-3 text-slate-600">
-            Your learning modules will appear here.
-          </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {trainingModules.map((module) => {
+            const hasVideo = Boolean(module.video);
+            return (
+              <button
+                key={module.title}
+                type="button"
+                disabled={!hasVideo}
+                onClick={() => hasVideo && setActiveModule(module)}
+                className={`text-left bg-white border border-slate-200 rounded-3xl p-6 transition ${
+                  hasVideo ? "hover:shadow-md cursor-pointer" : "cursor-default"
+                }`}
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <h3 className="text-xl font-semibold">{module.title}</h3>
+                  {hasVideo ? (
+                    <span className="shrink-0 inline-flex items-center gap-1.5 text-sm font-medium text-slate-700 bg-slate-100 rounded-full px-3 py-1">
+                      <PlayCircle size={16} />
+                      Watch
+                    </span>
+                  ) : (
+                    <span className="shrink-0 text-sm text-slate-400">
+                      Video coming soon
+                    </span>
+                  )}
+                </div>
+
+                <p className="mt-2 text-slate-600">{module.description}</p>
+              </button>
+            );
+          })}
         </div>
+
+        {activeModule && (
+          <VideoModal
+            title={activeModule.title}
+            video={activeModule.video}
+            onClose={() => setActiveModule(null)}
+          />
+        )}
       </div>
     </div>
   );
