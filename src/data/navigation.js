@@ -14,7 +14,7 @@ export const navigationCards = [
   {
     title: "Learning Hub",
     path: "/learning-hub",
-    description: "Explore training modules",
+    description: "Explore training module",
     items: [
       "Content Marketing",
       "Creator Partnerships",
