@@ -100,7 +100,7 @@ export default function StartHere() {
         {activeSection && (
           <VideoModal
             title={activeSection.title}
-            video={activeSection.video}
+            videos={[{ title: activeSection.title, url: activeSection.video }]}
             onClose={() => setActiveSection(null)}
           />
         )}

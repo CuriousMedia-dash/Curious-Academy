@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 
 // Turns common share links into embeddable URLs.
@@ -22,7 +22,8 @@ export function resolveVideo(url) {
   return { type: "video", src: url };
 }
 
-export default function VideoModal({ title, video, onClose }) {
+export default function VideoModal({ title, videos = [], onClose }) {
+  const [current, setCurrent] = useState(0);
   useEffect(() => {
     const onKey = (e) => e.key === "Escape" && onClose();
     document.addEventListener("keydown", onKey);
@@ -33,7 +34,7 @@ export default function VideoModal({ title, video, onClose }) {
     };
   }, [onClose]);
 
-  const resolved = resolveVideo(video);
+  const resolved = resolveVideo(videos[current]?.url);
 
   return (
     <div
@@ -55,9 +56,28 @@ export default function VideoModal({ title, video, onClose }) {
           </button>
         </div>
 
+        {videos.length > 1 && (
+          <div className="flex gap-2 px-6 py-3 border-b border-slate-200">
+            {videos.map((v, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrent(i)}
+                className={`px-4 py-1.5 rounded-full text-sm font-medium transition ${
+                  i === current
+                    ? "bg-slate-900 text-white"
+                    : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                }`}
+              >
+                {v.title}
+              </button>
+            ))}
+          </div>
+        )}
+
         <div className="bg-black">
           {resolved?.type === "iframe" ? (
             <iframe
+              key={resolved.src}
               className="w-full aspect-video"
               src={resolved.src}
               title={title}
@@ -66,6 +86,7 @@ export default function VideoModal({ title, video, onClose }) {
             />
           ) : (
             <video
+              key={resolved?.src}
               className="w-full aspect-video"
               src={resolved?.src}
               controls
