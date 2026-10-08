@@ -27,7 +27,7 @@ export const trainingModules = [
   {
     title: "Influencer Marketing",
     description: "Running influencer campaigns from brief to reporting.",
-    video: "",
+    video: "https://youtu.be/tze_uFtDf3w",
   },
   {
     title: "Meme Marketing",
