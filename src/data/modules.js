@@ -15,9 +15,12 @@ export const trainingModules = [
     ],
   },
   {
-    title: "Creator Partnerships",
+    title: "Business Development",
     description: "Finding, onboarding, and working long-term with creators.",
-    video: "",
+    videos: [
+      { title: "Part 1", url: "https://youtu.be/Y3efl0pyQnQ" },
+      { title: "Part 2", url: "" },
+    ],
   },
   {
     title: "Brand Partnerships",
