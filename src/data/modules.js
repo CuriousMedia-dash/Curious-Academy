@@ -22,11 +22,7 @@ export const trainingModules = [
       { title: "Part 2", url: "" },
     ],
   },
-  {
-    title: "Brand Partnerships",
-    description: "How we pitch, close, and manage brand collaborations.",
-    video: "",
-  },
+ 
   {
     title: "Influencer Marketing",
     description: "Running influencer campaigns from brief to reporting.",
