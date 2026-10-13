@@ -17,8 +17,7 @@ export const navigationCards = [
     description: "Explore training module",
     items: [
       "Content Marketing",
-      "Creator Partnerships",
-      "Brand Partnerships",
+      "Business Development",
       "Influencer Marketing",
       "Meme Marketing",
       "Show Marketing",

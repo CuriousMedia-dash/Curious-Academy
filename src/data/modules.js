@@ -16,13 +16,12 @@ export const trainingModules = [
   },
   {
     title: "Business Development",
-    description: "Finding, onboarding, and working long-term with creators.",
+    description: "How we find, pitch, and close new brand and client partnerships.",
     videos: [
       { title: "Part 1", url: "https://youtu.be/Y3efl0pyQnQ" },
       { title: "Part 2", url: "" },
     ],
   },
- 
   {
     title: "Influencer Marketing",
     description: "Running influencer campaigns from brief to reporting.",
