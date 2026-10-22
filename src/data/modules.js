@@ -19,7 +19,7 @@ export const trainingModules = [
     description: "How we find, pitch, and close new brand and client partnerships.",
     videos: [
       { title: "Part 1", url: "https://youtu.be/Y3efl0pyQnQ" },
-      { title: "Part 2", url: "" },
+      { title: "Part 2", url: "https://youtu.be/C01rHphh74c" },
     ],
   },
   {
