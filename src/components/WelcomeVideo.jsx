@@ -2,7 +2,7 @@ import { resolveVideo } from "./VideoModal";
 
 // Paste the leadership welcome video link here.
 // YouTube (Unlisted), Google Drive ("Anyone with the link"), and Loom links all work.
-const WELCOME_VIDEO = "";
+const WELCOME_VIDEO = " ";
 
 export default function WelcomeVideo() {
   const video = resolveVideo(WELCOME_VIDEO);
