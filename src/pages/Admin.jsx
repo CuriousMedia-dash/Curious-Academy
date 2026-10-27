@@ -18,7 +18,7 @@ async function callAdminApi(session, payload) {
   return data;
 }
 
-const emptyForm = { fullName: "", employeeId: "", role: "employee", password: "" };
+const emptyForm = { fullName: "", email: "", role: "employee", password: "" };
 
 export default function Admin() {
   const { session, profile: me } = useAuth();
@@ -32,14 +32,14 @@ export default function Admin() {
   const [creating, setCreating] = useState(false);
   const [formError, setFormError] = useState("");
 
-  const [credentials, setCredentials] = useState(null); // { fullName, employeeId, password, kind }
+  const [credentials, setCredentials] = useState(null); // { fullName, email, password, kind }
   const [busyId, setBusyId] = useState(null);
 
   const loadUsers = useCallback(async () => {
     setListError("");
     const { data, error } = await supabase
       .from("profiles")
-      .select("id, employee_id, full_name, role, active, created_at")
+      .select("id, email, full_name, role, active, created_at")
       .order("created_at", { ascending: false });
     if (error) setListError(error.message);
     else setUsers(data);
@@ -54,7 +54,7 @@ export default function Admin() {
     const q = query.trim().toLowerCase();
     if (!q) return users;
     return users.filter(
-      (u) => u.full_name.toLowerCase().includes(q) || u.employee_id.includes(q)
+      (u) => u.full_name.toLowerCase().includes(q) || u.email.includes(q)
     );
   }, [users, query]);
 
@@ -137,15 +137,16 @@ export default function Admin() {
               />
             </Field>
 
-            <Field label="Employee ID" hint="They'll sign in with this. Letters, numbers, . _ -">
+            <Field label="Email" hint="They'll sign in with this. Any email works.">
               <input
                 required
+                type="email"
                 autoCapitalize="none"
                 spellCheck={false}
-                value={form.employeeId}
-                onChange={(e) => setForm({ ...form, employeeId: e.target.value.toLowerCase().replace(/\s/g, "") })}
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value.toLowerCase().trim() })}
                 className={inputClass}
-                placeholder="e.g. priya.sharma"
+                placeholder="e.g. priya@company.com"
               />
             </Field>
 
@@ -196,7 +197,7 @@ export default function Admin() {
                 <input
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search name or ID"
+                  placeholder="Search name or email"
                   className="rounded-xl border border-slate-300 pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/20"
                 />
               </div>
@@ -214,7 +215,7 @@ export default function Admin() {
                   <thead>
                     <tr className="text-left text-slate-500 border-b border-slate-200">
                       <th className="py-3 pr-4 font-medium">Name</th>
-                      <th className="py-3 pr-4 font-medium">ID</th>
+                      <th className="py-3 pr-4 font-medium">Email</th>
                       <th className="py-3 pr-4 font-medium">Role</th>
                       <th className="py-3 pr-4 font-medium">Status</th>
                       <th className="py-3 font-medium text-right">Actions</th>
@@ -230,7 +231,7 @@ export default function Admin() {
                             {u.full_name}
                             {isMe && <span className="ml-2 text-xs text-slate-400">(you)</span>}
                           </td>
-                          <td className="py-3 pr-4 font-mono text-slate-700">{u.employee_id}</td>
+                          <td className="py-3 pr-4 text-slate-700 break-all">{u.email}</td>
                           <td className="py-3 pr-4">
                             <span
                               className={`px-2.5 py-1 rounded-full text-xs font-medium ${
@@ -299,7 +300,7 @@ function CredentialsCard({ credentials, onClose }) {
   const message =
     `Hi ${credentials.fullName}, here are your Curious Lab login details:\n\n` +
     `Link: ${loginUrl}\n` +
-    `ID: ${credentials.employeeId}\n` +
+    `Email: ${credentials.email}\n` +
     `Password: ${credentials.password}`;
 
   const copy = async () => {
@@ -326,7 +327,7 @@ function CredentialsCard({ credentials, onClose }) {
 
       <dl className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
         <Cred label="Login link" value={loginUrl} />
-        <Cred label="ID" value={credentials.employeeId} mono />
+        <Cred label="Email" value={credentials.email} />
         <Cred label="Password" value={credentials.password} mono />
       </dl>
 

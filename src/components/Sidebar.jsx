@@ -122,9 +122,8 @@ export default function Sidebar() {
             {profile && (
               <div className="mt-auto pt-4 border-t border-slate-200">
                 <p className="font-medium text-slate-900">{profile.full_name}</p>
-                <p className="text-sm text-slate-500">
-                  {profile.employee_id} · {isAdmin ? "Admin" : "Employee"}
-                </p>
+                <p className="text-sm text-slate-500 break-all">{profile.email}</p>
+                <p className="text-xs text-slate-400">{isAdmin ? "Admin" : "Employee"}</p>
                 <button
                   onClick={async () => {
                     await signOut();

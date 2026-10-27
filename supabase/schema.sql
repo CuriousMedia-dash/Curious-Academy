@@ -4,7 +4,7 @@
 -- 1. Profiles: one row per login, linked to Supabase Auth.
 create table if not exists public.profiles (
   id          uuid primary key references auth.users (id) on delete cascade,
-  employee_id text not null unique,
+  email       text not null unique,
   full_name   text not null,
   role        text not null default 'employee' check (role in ('admin', 'employee')),
   active      boolean not null default true,
@@ -48,16 +48,14 @@ create policy "admins read all profiles"
 -- 4. FIRST ADMIN (do this once, after running everything above)
 --
 --   a) Dashboard -> Authentication -> Users -> Add user -> Create new user
---        Email:    admin@curiouslab.local      (use your own ID before the @)
---        Password: choose a strong one
---        Tick "Auto Confirm User"
+--        Email: your email, Password: choose one, tick "Auto Confirm User"
 --
---   b) Then run this, with the same ID and your name:
+--   b) Then run this with that email and your name:
 --
--- insert into public.profiles (id, employee_id, full_name, role)
--- select id, 'admin', 'Your Name', 'admin'
--- from auth.users where email = 'admin@curiouslab.local';
+-- insert into public.profiles (id, email, full_name, role)
+-- select id, email, 'Your Name', 'admin'
+-- from auth.users where email = 'you@yourcompany.com';
 --
---   You can now log in to the portal with ID "admin" and that password,
---   and create everyone else from the Admin page.
+--   Log in to the portal with that email and password, then create
+--   everyone else from the Admin page.
 -- ---------------------------------------------------------------------------

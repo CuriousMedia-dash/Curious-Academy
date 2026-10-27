@@ -9,7 +9,7 @@ export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [employeeId, setEmployeeId] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
@@ -26,7 +26,7 @@ export default function Login() {
     setError("");
     setSubmitting(true);
     try {
-      await signIn(employeeId, password);
+      await signIn(email, password);
       navigate(redirectTo, { replace: true });
     } catch (err) {
       setError(err.message);
@@ -40,7 +40,7 @@ export default function Login() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-slate-900">Curious Lab</h1>
-          <p className="mt-2 text-slate-600">Sign in with the ID your admin shared with you.</p>
+          <p className="mt-2 text-slate-600">Sign in with the email and password your admin shared with you.</p>
         </div>
 
         <form
@@ -54,19 +54,20 @@ export default function Login() {
           )}
 
           <div>
-            <label htmlFor="employeeId" className="block text-sm font-medium text-slate-700">
-              Employee ID
+            <label htmlFor="email" className="block text-sm font-medium text-slate-700">
+              Email
             </label>
             <input
-              id="employeeId"
+              id="email"
+              type="email"
               autoComplete="username"
               autoCapitalize="none"
               spellCheck={false}
               required
-              value={employeeId}
-              onChange={(e) => setEmployeeId(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="mt-1.5 w-full rounded-xl border border-slate-300 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-slate-900/20 focus:border-slate-400"
-              placeholder="e.g. vihith"
+              placeholder="you@company.com"
             />
           </div>
 

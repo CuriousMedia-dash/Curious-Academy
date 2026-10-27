@@ -8,8 +8,7 @@
 import { randomInt } from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
 
-const LOGIN_DOMAIN = "curiouslab.local";
-const ID_PATTERN = /^[a-z0-9._-]{2,40}$/;
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
 const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -70,15 +69,13 @@ export default async function handler(req, res) {
   try {
     // ---- Create a new user ------------------------------------------------
     if (action === "create") {
-      const employeeId = String(body.employeeId || "").trim().toLowerCase();
+      const email = String(body.email || "").trim().toLowerCase();
       const fullName = String(body.fullName || "").trim();
       const role = body.role === "admin" ? "admin" : "employee";
       const password = String(body.password || "").trim() || generatePassword();
 
-      if (!ID_PATTERN.test(employeeId)) {
-        return send(res, 400, {
-          error: "ID must be 2–40 characters: letters, numbers, dot, dash or underscore.",
-        });
+      if (!EMAIL_PATTERN.test(email)) {
+        return send(res, 400, { error: "Enter a valid email address." });
       }
       if (!fullName) return send(res, 400, { error: "Full name is required." });
       if (password.length < 8) {
@@ -86,22 +83,22 @@ export default async function handler(req, res) {
       }
 
       const { data: created, error: createErr } = await admin.auth.admin.createUser({
-        email: `${employeeId}@${LOGIN_DOMAIN}`,
+        email,
         password,
-        email_confirm: true,
-        user_metadata: { employee_id: employeeId, full_name: fullName },
+        email_confirm: true, // no confirmation email needed: the admin vouches for them
+        user_metadata: { full_name: fullName },
       });
 
       if (createErr) {
         const taken = /already|registered|exists/i.test(createErr.message);
         return send(res, taken ? 409 : 400, {
-          error: taken ? `The ID "${employeeId}" is already taken.` : createErr.message,
+          error: taken ? `${email} already has an account.` : createErr.message,
         });
       }
 
       const { error: profileErr } = await admin.from("profiles").insert({
         id: created.user.id,
-        employee_id: employeeId,
+        email,
         full_name: fullName,
         role,
       });
@@ -112,7 +109,7 @@ export default async function handler(req, res) {
         return send(res, 400, { error: profileErr.message });
       }
 
-      return send(res, 200, { employeeId, password, fullName, role });
+      return send(res, 200, { email, password, fullName, role });
     }
 
     // ---- Reset a user's password -----------------------------------------
@@ -124,7 +121,7 @@ export default async function handler(req, res) {
 
       const { data: profile } = await admin
         .from("profiles")
-        .select("employee_id")
+        .select("email")
         .eq("id", body.userId)
         .single();
       if (!profile) return send(res, 404, { error: "User not found." });
@@ -132,7 +129,7 @@ export default async function handler(req, res) {
       const { error } = await admin.auth.admin.updateUserById(body.userId, { password });
       if (error) return send(res, 400, { error: error.message });
 
-      return send(res, 200, { employeeId: profile.employee_id, password });
+      return send(res, 200, { email: profile.email, password });
     }
 
     // ---- Activate / deactivate -------------------------------------------

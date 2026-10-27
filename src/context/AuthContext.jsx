@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { supabase, idToEmail } from "../lib/supabase";
+import { supabase } from "../lib/supabase";
 
 const AuthContext = createContext(null);
 
@@ -18,7 +18,7 @@ export function AuthProvider({ children }) {
     }
     const { data } = await supabase
       .from("profiles")
-      .select("id, employee_id, full_name, role, active")
+      .select("id, email, full_name, role, active")
       .eq("id", user.id)
       .single();
     setProfile(data ?? null);
@@ -44,18 +44,18 @@ export function AuthProvider({ children }) {
     return () => sub.subscription.unsubscribe();
   }, [loadProfile]);
 
-  const signIn = async (employeeId, password) => {
+  const signIn = async (email, password) => {
     if (!supabase) throw new Error("Login isn't configured yet.");
 
     const { data, error } = await supabase.auth.signInWithPassword({
-      email: idToEmail(employeeId),
+      email: email.trim().toLowerCase(),
       password,
     });
     if (error) {
       throw new Error(
         /banned/i.test(error.message)
           ? "This account has been deactivated. Contact your admin."
-          : "Incorrect ID or password."
+          : "Incorrect email or password."
       );
     }
 
